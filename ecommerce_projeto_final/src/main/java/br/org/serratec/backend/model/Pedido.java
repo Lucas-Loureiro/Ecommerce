@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -21,15 +22,12 @@ public class Pedido {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_pedido")
 	private Long id;
-	@Past
 	private LocalDate dataPedido;
-	@Past
 	private LocalDate dataEntrega;
-	@Past
 	private LocalDate dataEnvio;
 	@NotBlank(message = "Status não pode estar em branco")
-	@Size(max = 20, message = "A quantidade máxima de caracteres é {max}")
-	private String status;
+	@Enumerated
+	private StatusEnum status;
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_cliente")
 	private Cliente cliente;
@@ -38,7 +36,7 @@ public class Pedido {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Pedido(Long id, LocalDate dataPedido, LocalDate dataEntrega, LocalDate dataEnvio, String status,
+	public Pedido(Long id, LocalDate dataPedido, LocalDate dataEntrega, LocalDate dataEnvio, @NotBlank(message = "Status não pode estar em branco") StatusEnum status,
 			Cliente cliente) {
 		super();
 		this.id = id;
@@ -81,11 +79,11 @@ public class Pedido {
 		this.dataEnvio = dataEnvio;
 	}
 
-	public String getStatus() {
+	public StatusEnum getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(StatusEnum status) {
 		this.status = status;
 	}
 

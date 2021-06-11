@@ -1,5 +1,6 @@
 package br.org.serratec.backend.model;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -10,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Positive;
 
 @Entity
 public class ItemPedido {
@@ -17,8 +20,10 @@ public class ItemPedido {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_item_pedido")
 	private Long id;
+	@Positive
 	private Integer quantidade;
-	private Integer preco_venda;
+	@Positive
+	private BigDecimal preco_venda;
 	@ManyToMany
 	@JoinTable(name = "item_pedido", joinColumns = @JoinColumn(name = "id_produto"), inverseJoinColumns = @JoinColumn(name = "id_pedido"))
 	private List<Pedido> pedido;
@@ -27,7 +32,7 @@ public class ItemPedido {
 		// TODO Auto-generated constructor stub
 	}
 
-	public ItemPedido(Long id, Integer quantidade, Integer preco_venda, List<Pedido> pedido) {
+	public ItemPedido(Long id, Integer quantidade, BigDecimal preco_venda, List<Pedido> pedido) {
 		super();
 		this.id = id;
 		this.quantidade = quantidade;
@@ -51,11 +56,11 @@ public class ItemPedido {
 		this.quantidade = quantidade;
 	}
 
-	public Integer getPreco_venda() {
+	public BigDecimal getPreco_venda() {
 		return preco_venda;
 	}
 
-	public void setPreco_venda(Integer preco_venda) {
+	public void setPreco_venda(BigDecimal preco_venda) {
 		this.preco_venda = preco_venda;
 	}
 

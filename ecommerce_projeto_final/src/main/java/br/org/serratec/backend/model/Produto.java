@@ -1,5 +1,6 @@
 package br.org.serratec.backend.model;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import javax.persistence.CascadeType;
@@ -10,9 +11,11 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Negative;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
 @Entity
@@ -28,9 +31,11 @@ public class Produto {
 	@Size(max = 100, message = "A quantidade máxima de caracteres é {max}")
 	private String descricao;
 	@NotBlank(message = "Quantidade de estoque não pode estar em branco")
+	@Min(value = 0)
 	private Integer qtdEstoque;
 	private LocalDate dataCadastro;
-	private Double valorUnitario;
+	@Positive
+	private BigDecimal valorUnitario;
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_foto")
 	private Foto foto;
@@ -46,7 +51,7 @@ public class Produto {
 			@NotBlank(message = "Nome não pode estar em branco") @Size(max = 30, message = "A quantidade máxima de caracteres é {max}") String nome,
 			@NotBlank(message = "Descrição não pode estar em branco") @Size(max = 100, message = "A quantidade máxima de caracteres é {max}") String descricao,
 			@NotBlank(message = "Quantidade de estoque não pode estar em branco") Integer qtdEstoque,
-			LocalDate dataCadastro, Double valorUnitario, Foto foto, Categoria categoria) {
+			LocalDate dataCadastro, BigDecimal valorUnitario, Foto foto, Categoria categoria) {
 		super();
 		this.id = id;
 		this.nome = nome;
@@ -98,11 +103,11 @@ public class Produto {
 		this.dataCadastro = dataCadastro;
 	}
 
-	public Double getValorUnitario() {
+	public BigDecimal getValorUnitario() {
 		return valorUnitario;
 	}
 
-	public void setValorUnitario(Double valorUnitario) {
+	public void setValorUnitario(BigDecimal valorUnitario) {
 		this.valorUnitario = valorUnitario;
 	}
 
