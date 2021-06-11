@@ -3,6 +3,7 @@ package br.org.serratec.backend.service;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -23,8 +24,11 @@ public class ClienteService {
 	@Autowired
 	private EnderecoRepository enderecoRepository;
 
-	public Cliente inserir(Cliente cliente) /*throws CpfException, EmailException, UsuarioException*/ {
-		/*Cliente cCpf = clienteRepository.findByCpf(cliente.getCpf());
+	@Autowired
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+	public Cliente inserir(Cliente cliente) throws CpfException, EmailException, UsuarioException {
+		Cliente cCpf = clienteRepository.findByCpf(cliente.getCpf());
 		if (cCpf != null) {
 			throw new CpfException("CPF já existente");
 		}
@@ -35,11 +39,10 @@ public class ClienteService {
 		Cliente cUsuario = clienteRepository.findByNomeUsuario(cliente.getNomeUsuario());
 		if (cUsuario != null) {
 			throw new UsuarioException("Usuário já existente");
-		}*/
-
+		}
 		Cliente c1 = new Cliente();
-		if (buscar(cliente.getEndereco().getCep()) != null) {
-			EnderecoDTO dto = buscar(cliente.getEndereco().getCep());
+		EnderecoDTO dto = buscar(cliente.getEndereco().getCep());
+		if (dto != null) {
 			c1.setEndereco(new Endereco(dto));
 		}
 
@@ -48,7 +51,7 @@ public class ClienteService {
 		c1.setNomeUsuario(cliente.getNomeUsuario());
 		c1.setDataNasc(cliente.getDataNasc());
 		c1.setNomeCompleto(cliente.getNomeCompleto());
-		c1.setSenha(cliente.getSenha());
+		c1.setSenha(bCryptPasswordEncoder.encode(cliente.getSenha()));
 		c1.setTelefone(cliente.getTelefone());
 		c1.setComplemento(cliente.getComplemento());
 		c1.setNumero(cliente.getNumero());
@@ -60,22 +63,24 @@ public class ClienteService {
 	public EnderecoDTO buscar(String cep) {
 		Optional<Endereco> endereco = Optional.ofNullable(enderecoRepository.findByCep(cep));
 		if (endereco.isPresent()) {
+			System.out.println("aqui");
 			return new EnderecoDTO(endereco.get());
 		} else {
+			System.out.println("aqui2");
 			RestTemplate restTemplate = new RestTemplate();
 			String uri = "https://viacep.com.br/ws/" + cep + "/json/";
 			Optional<Endereco> enderecoViaCep = Optional.ofNullable(restTemplate.getForObject(uri, Endereco.class));
 			if (enderecoViaCep.get().getCep() != null) {
 				String cepSemTraco = enderecoViaCep.get().getCep().replaceAll("-", "");
 				enderecoViaCep.get().setCep(cepSemTraco);
-				return inserir(enderecoViaCep.get());
+				return adicionar(enderecoViaCep.get());
 			} else {
 				return null;
 			}
 		}
 	}
 
-	public EnderecoDTO inserir(Endereco endereco) {
+	public EnderecoDTO adicionar(Endereco endereco) {
 		endereco = enderecoRepository.save(endereco);
 		return new EnderecoDTO(endereco);
 	}
@@ -87,9 +92,9 @@ public class ClienteService {
 		 * buscar(cliente.getEndereco().getCep()); cliente.setEndereco(new
 		 * Endereco(dto)); }
 		 */
-		
+
 		cliente.setId(id);
-		cliente = inserir(cliente);
+		// cliente = inserir(cliente);
 		return cliente;
 	}
 }

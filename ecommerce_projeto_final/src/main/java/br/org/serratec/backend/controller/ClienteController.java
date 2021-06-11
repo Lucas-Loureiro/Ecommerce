@@ -1,4 +1,4 @@
-package br.org.serratec.backend;
+package br.org.serratec.backend.controller;
 
 import java.util.List;
 

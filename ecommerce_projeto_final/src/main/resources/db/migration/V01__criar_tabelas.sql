@@ -26,13 +26,18 @@ id_cliente INTEGER, FOREIGN KEY(id_cliente) REFERENCES cliente(id_cliente));
 
 CREATE TABLE categoria (id_categoria SERIAL PRIMARY KEY, nome varchar(30) NOT NULL, descricao varchar(150));
 
+CREATE TABLE foto (id_foto SERIAL PRIMARY KEY, 
+dados oid,
+tipo varchar(20),
+nome varchar(20));
+ 
 CREATE TABLE produto (id_produto SERIAL PRIMARY KEY,
 nome varchar(30) NOT NULL,
 descricao varchar(100),
 qtd_estoque INTEGER NOT NULL,
 data_cadastro DATE,
 valor_unitario FLOAT NOT NULL, 
-imagem oid,
+id_foto INTEGER, FOREIGN kEY(id_foto) REFERENCES foto(id_foto),
 id_categoria INTEGER, FOREIGN KEY(id_categoria) REFERENCES categoria(id_categoria));
 
 
