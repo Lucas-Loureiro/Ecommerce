@@ -1,13 +1,12 @@
 package br.org.serratec.backend.model;
 
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
-import javax.persistence.OneToOne;
 
 @Entity
 public class Foto {
@@ -23,6 +22,8 @@ public class Foto {
 
 	private String nome;
 
+
+
 	public Foto() {
 		// TODO Auto-generated constructor stub
 	}
@@ -33,6 +34,7 @@ public class Foto {
 		this.dados = dados;
 		this.tipo = tipo;
 		this.nome = nome;
+		
 	}
 
 	public Long getId() {
@@ -66,6 +68,8 @@ public class Foto {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
+
+	
 
 	@Override
 	public int hashCode() {

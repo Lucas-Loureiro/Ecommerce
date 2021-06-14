@@ -11,12 +11,14 @@ import br.org.serratec.backend.exception.UsuarioException;
 import br.org.serratec.backend.model.Cliente;
 import br.org.serratec.backend.model.Endereco;
 import br.org.serratec.backend.repository.ClienteRepository;
+import br.org.serratec.backend.repository.EnderecoRepository;
+import br.org.serratec.backend.repository.PedidoRepository;
 
 @Service
 public class ClienteService {
 	@Autowired
 	private ClienteRepository clienteRepository;
-
+	
 	@Autowired
 	private EnderecoService service;
 
@@ -41,7 +43,6 @@ public class ClienteService {
 		if (dto != null) {
 			c1.setEndereco(new Endereco(dto));
 		}
-
 		c1.setCpf(cliente.getCpf());
 		c1.setEmail(cliente.getEmail());
 		c1.setNomeUsuario(cliente.getNomeUsuario());
@@ -58,16 +59,12 @@ public class ClienteService {
 
 	
 
-	public Cliente atualizar(Cliente cliente, Long id) {
+	public Cliente atualizar(Cliente c1, Long id) throws CpfException, EmailException, UsuarioException {
 
-		/*
-		 * if (buscar(cliente.getEndereco().getCep()) != null) { EnderecoDTO dto =
-		 * buscar(cliente.getEndereco().getCep()); cliente.setEndereco(new
-		 * Endereco(dto)); }
-		 */
+	
+		c1.setId(id);
+		clienteRepository.save(c1);
+		return c1;
 
-		cliente.setId(id);
-		// cliente = inserir(cliente);
-		return cliente;
 	}
 }

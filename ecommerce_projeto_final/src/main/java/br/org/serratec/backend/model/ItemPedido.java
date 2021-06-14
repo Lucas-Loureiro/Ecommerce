@@ -1,18 +1,16 @@
 package br.org.serratec.backend.model;
 
-import java.math.BigDecimal;
-import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.validation.constraints.Min;
+import javax.persistence.ManyToOne;
+import javax.persistence.Transient;
 import javax.validation.constraints.Positive;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class ItemPedido {
@@ -23,21 +21,32 @@ public class ItemPedido {
 	@Positive
 	private Integer quantidade;
 	@Positive
-	private BigDecimal preco_venda;
-	@ManyToMany
-	@JoinTable(name = "item_pedido", joinColumns = @JoinColumn(name = "id_produto"), inverseJoinColumns = @JoinColumn(name = "id_pedido"))
-	private List<Pedido> pedido;
+	private Double precoVenda;
 	
+	@ManyToOne
+	@JoinColumn(name = "id_pedido")
+	private Pedido pedido;
+	
+	@ManyToOne
+	@JoinColumn(name = "id_produto")
+	private Produto produto;
+
+	@Transient
+	public Double getSubTotal() {
+		System.out.println(precoVenda);
+		return precoVenda * quantidade;
+	}
+
 	public ItemPedido() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public ItemPedido(Long id, Integer quantidade, BigDecimal preco_venda, List<Pedido> pedido) {
+	public ItemPedido(Long id, Integer quantidade, Double precoVenda) {
 		super();
 		this.id = id;
 		this.quantidade = quantidade;
-		this.preco_venda = preco_venda;
-		this.pedido = pedido;
+		this.precoVenda = precoVenda;
+
 	}
 
 	public Long getId() {
@@ -56,20 +65,29 @@ public class ItemPedido {
 		this.quantidade = quantidade;
 	}
 
-	public BigDecimal getPreco_venda() {
-		return preco_venda;
+	public Double getPrecoVenda() {
+		return precoVenda;
 	}
 
-	public void setPreco_venda(BigDecimal preco_venda) {
-		this.preco_venda = preco_venda;
-	}
 
-	public List<Pedido> getPedido() {
+	public Pedido getPedido() {
 		return pedido;
 	}
 
-	public void setPedido(List<Pedido> pedido) {
+	public void setPedido(Pedido pedido) {
 		this.pedido = pedido;
+	}
+
+	public Produto getProduto() {
+		return produto;
+	}
+
+	public void setProduto(Produto produto) {
+		this.produto = produto;
+	}
+
+	public void setPrecoVenda(Double precoVenda) {
+		this.precoVenda = precoVenda;
 	}
 
 	@Override
@@ -96,7 +114,5 @@ public class ItemPedido {
 			return false;
 		return true;
 	}
-	
-	
-	
-}	
+
+}

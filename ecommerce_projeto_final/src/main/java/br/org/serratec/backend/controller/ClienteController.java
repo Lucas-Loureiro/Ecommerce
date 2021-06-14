@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-
+import br.org.serratec.backend.exception.CpfException;
+import br.org.serratec.backend.exception.EmailException;
+import br.org.serratec.backend.exception.UsuarioException;
 import br.org.serratec.backend.model.Cliente;
 import br.org.serratec.backend.repository.ClienteRepository;
 import br.org.serratec.backend.service.ClienteService;
@@ -49,12 +51,16 @@ public class ClienteController {
 	}
 	@PutMapping("{id}")
 	@ResponseStatus(HttpStatus.CREATED)
-	public ResponseEntity<Cliente> atualiazar(@PathVariable Long id, @Valid @RequestBody Cliente cliente){
+	public ResponseEntity<Object> atualiazar(@PathVariable Long id, @Valid @RequestBody Cliente cliente){
 		if(!clienteRepository.existsById(id)) {
 			return ResponseEntity.notFound().build();
 		}
 	
-		return ResponseEntity.ok(clienteService.atualizar(cliente, id));
+		try {
+			return ResponseEntity.ok(clienteService.atualizar(cliente, id));
+		} catch (CpfException | EmailException | UsuarioException e) {
+			return ResponseEntity.unprocessableEntity().body(e.getMessage());
+		}
 	}
 	
 	@DeleteMapping("{id}")

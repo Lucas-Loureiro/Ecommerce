@@ -1,7 +1,8 @@
 package br.org.serratec.backend.model;
 
-import java.math.BigDecimal;
+
 import java.time.LocalDate;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -11,9 +12,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.Negative;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
@@ -30,28 +31,35 @@ public class Produto {
 	@NotBlank(message = "Descrição não pode estar em branco")
 	@Size(max = 100, message = "A quantidade máxima de caracteres é {max}")
 	private String descricao;
-	@NotBlank(message = "Quantidade de estoque não pode estar em branco")
 	@Min(value = 0)
 	private Integer qtdEstoque;
 	private LocalDate dataCadastro;
 	@Positive
-	private BigDecimal valorUnitario;
+	@Column(name = "valor_unitario")
+	private Double valorUnitario;
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_foto")
 	private Foto foto;
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_categoria")
 	private Categoria categoria;
+	
 
 	public Produto() {
 		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	public String toString() {
+		return "Produto [nome=" + nome + ", qtdEstoque=" + qtdEstoque + ", valorUnitario=" + valorUnitario + ", pedido="
+				 + "]";
 	}
 
 	public Produto(Long id,
 			@NotBlank(message = "Nome não pode estar em branco") @Size(max = 30, message = "A quantidade máxima de caracteres é {max}") String nome,
 			@NotBlank(message = "Descrição não pode estar em branco") @Size(max = 100, message = "A quantidade máxima de caracteres é {max}") String descricao,
 			@NotBlank(message = "Quantidade de estoque não pode estar em branco") Integer qtdEstoque,
-			LocalDate dataCadastro, BigDecimal valorUnitario, Foto foto, Categoria categoria) {
+			LocalDate dataCadastro, Double valorUnitario, Foto foto, Categoria categoria) {
 		super();
 		this.id = id;
 		this.nome = nome;
@@ -103,11 +111,11 @@ public class Produto {
 		this.dataCadastro = dataCadastro;
 	}
 
-	public BigDecimal getValorUnitario() {
+	public Double getValorUnitario() {
 		return valorUnitario;
 	}
 
-	public void setValorUnitario(BigDecimal valorUnitario) {
+	public void setValorUnitario(Double valorUnitario) {
 		this.valorUnitario = valorUnitario;
 	}
 
@@ -126,6 +134,8 @@ public class Produto {
 	public void setCategoria(Categoria categoria) {
 		this.categoria = categoria;
 	}
+
+
 
 	@Override
 	public int hashCode() {

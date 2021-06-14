@@ -18,7 +18,7 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.br.CPF;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
 
 
 
@@ -52,9 +52,10 @@ public class Cliente {
 	private Integer numero;
 	@Past(message = "Data não existente")
 	private LocalDate dataNasc;
-	@OneToOne(cascade = CascadeType.PERSIST)
+	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_endereco")
 	private Endereco endereco;
+	
 	
 
 	public Cliente() {

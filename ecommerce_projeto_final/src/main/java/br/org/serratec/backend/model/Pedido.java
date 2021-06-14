@@ -1,20 +1,23 @@
 package br.org.serratec.backend.model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Past;
-import javax.validation.constraints.Size;
 
 @Entity
 public class Pedido {
@@ -25,19 +28,40 @@ public class Pedido {
 	private LocalDate dataPedido;
 	private LocalDate dataEntrega;
 	private LocalDate dataEnvio;
-	@NotBlank(message = "Status não pode estar em branco")
-	@Enumerated
-	private StatusEnum status;
-	@ManyToOne(cascade = CascadeType.ALL)
+	
+	private String status;
+	@ManyToOne
 	@JoinColumn(name = "id_cliente")
 	private Cliente cliente;
+	@OneToMany(mappedBy = "pedido", fetch = FetchType.EAGER)
+	private List<ItemPedido> itemPedidos = new ArrayList<ItemPedido>();
+
+	
+	public Double getTotal() {
+		double soma = 0.0;
+		for (ItemPedido itemPedido : itemPedidos) {
+			soma += itemPedido.getSubTotal();
+			System.out.println(itemPedido.getSubTotal() + " " + soma + itemPedido.getId());
+			
+		
+		}
+		return soma ;
+	}
 
 	public Pedido() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Pedido(Long id, LocalDate dataPedido, LocalDate dataEntrega, LocalDate dataEnvio, @NotBlank(message = "Status não pode estar em branco") StatusEnum status,
-			Cliente cliente) {
+	@Override
+	public String toString() {
+		
+		return "PEDIDO \nDataEntrega: " + dataEntrega + "\nDataEnvio: " + dataEnvio  + "\nTotal: "
+				+ getTotal() ;
+
+	}
+
+	public Pedido(Long id, LocalDate dataPedido, LocalDate dataEntrega, LocalDate dataEnvio,
+			@NotBlank(message = "Status não pode estar em branco") String status, Cliente cliente) {
 		super();
 		this.id = id;
 		this.dataPedido = dataPedido;
@@ -79,11 +103,11 @@ public class Pedido {
 		this.dataEnvio = dataEnvio;
 	}
 
-	public StatusEnum getStatus() {
+	public String getStatus() {
 		return status;
 	}
 
-	public void setStatus(StatusEnum status) {
+	public void setStatus(String status) {
 		this.status = status;
 	}
 
@@ -93,6 +117,14 @@ public class Pedido {
 
 	public void setCliente(Cliente cliente) {
 		this.cliente = cliente;
+	}
+
+	public List<ItemPedido> getItemPedidos() {
+		return itemPedidos;
+	}
+
+	public void setItemPedidos(List<ItemPedido> itemPedidos) {
+		this.itemPedidos = itemPedidos;
 	}
 
 	@Override
