@@ -10,17 +10,20 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Transient;
 import javax.validation.constraints.Positive;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.annotations.ApiModelProperty;
 
 @Entity
 public class ItemPedido {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_item_pedido")
+	@ApiModelProperty(value= "Identificador único do itemPedido", required = true)
 	private Long id;
 	@Positive
+	@ApiModelProperty(value= "Quantidade", required = true)
 	private Integer quantidade;
 	@Positive
+	@ApiModelProperty(value= "Preço de venda", required = true)
 	private Double precoVenda;
 	
 	@ManyToOne
@@ -41,12 +44,16 @@ public class ItemPedido {
 		// TODO Auto-generated constructor stub
 	}
 
-	public ItemPedido(Long id, Integer quantidade, Double precoVenda) {
+
+
+	public ItemPedido(Long id, @Positive Integer quantidade, @Positive Double precoVenda, Pedido pedido,
+			Produto produto) {
 		super();
 		this.id = id;
 		this.quantidade = quantidade;
 		this.precoVenda = precoVenda;
-
+		this.pedido = pedido;
+		this.produto = produto;
 	}
 
 	public Long getId() {

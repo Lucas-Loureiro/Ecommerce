@@ -7,6 +7,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import br.org.serratec.backend.dto.EnderecoDTO;
+import io.swagger.annotations.ApiModelProperty;
 
 
 @Entity
@@ -14,11 +15,17 @@ public class Endereco {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_endereco")
+	@ApiModelProperty(value= "Identificador único do endereço", required = true)
 	private Long id;
+	@ApiModelProperty(value= "CEP", required = true)
 	private String cep;
+	@ApiModelProperty(value= "LOGRADOURO", required = true)
 	private String logradouro;
+	@ApiModelProperty(value= "BAIRRO", required = true)
 	private String bairro;
+	@ApiModelProperty(value= "LOCALIDADE", required = true)
 	private String localidade;
+	@ApiModelProperty(value= "ESTADO", required = true)
 	private String uf;
 
 	public Endereco() {

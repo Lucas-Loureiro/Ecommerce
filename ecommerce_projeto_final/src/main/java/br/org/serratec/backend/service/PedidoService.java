@@ -49,7 +49,7 @@ public class PedidoService {
 		pedidoRepository.save(p1);
 		if(pedido.getStatus().equals("FINALIZADO")) {
 			System.out.println(pedido.toString() + " " + p1.getCliente().getEmail() + p1.getTotal());
-			mailConfig.enviarEmail(p1.getCliente().getEmail(), "Cadastro Usuário", p1.toString() + p1.getTotal());
+			mailConfig.enviarEmail(p1.getCliente().getEmail(), "Nota fiscal", p1.toString());
 		}
 		return p1;
 	}

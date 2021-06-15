@@ -8,18 +8,24 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 
+import io.swagger.annotations.ApiModelProperty;
+
 @Entity
 public class Foto {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_foto")
+	@ApiModelProperty(value= "Identificador único da foto", required = true)
 	private Long id;
 
 	@Lob
+	@ApiModelProperty(value= "Dados da foto", required = true)
 	private byte[] dados;
-
+	
+	@ApiModelProperty(value= "Tipo da foto", required = true)
 	private String tipo;
-
+    
+	@ApiModelProperty(value= "Nome da foto", required = true)
 	private String nome;
 
 

@@ -2,7 +2,6 @@ package br.org.serratec.backend.model;
 
 import java.time.LocalDate;
 
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -18,15 +17,14 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.br.CPF;
 
-
-
-
+import io.swagger.annotations.ApiModelProperty;
 
 @Entity
 public class Cliente {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_cliente")
+	@ApiModelProperty(value = "Identificador único do cliente")
 	private Long id;
 	@NotBlank(message = "Email não pode estar em branco")
 	@Size(max = 30, message = "Email com máximo de {max} caracteres")
@@ -34,35 +32,40 @@ public class Cliente {
 	private String email;
 	@NotBlank(message = "Nome usuário não pode estar em branco")
 	@Size(max = 20, min = 3, message = "Nome do usuário não pode ser maior que {max} caracteres e menor que {min} caracteres")
+	@ApiModelProperty(value = "Nome de usuario", required = true)
 	private String nomeUsuario;
 	@NotBlank(message = "Nome usuário não pode estar em branco")
 	@Size(max = 20, message = "Nome do usuário não pode ser maior que {max} caracteres")
+	@ApiModelProperty(value = "Nome do cliente", required = true)
 	private String nomeCompleto;
 	@NotBlank(message = "Senha não pode estar em branco")
 	@Size(min = 8, message = "Senha não pode ser menor que {min} caracteres")
+	@ApiModelProperty(value = "Senha", required = true)
 	private String senha;
 	@NotBlank(message = "CPF não pode estar em branco")
 	@CPF(message = "CPF inválido")
+	@ApiModelProperty(value = "CPF", required = true)
 	private String cpf;
 	@NotBlank(message = "Telefone não pode estar em branco")
 	@Size(max = 11, min = 11, message = "Telefone tem que ser no mínimo {min} caracteres e no máximo {max} caracteres")
+	@ApiModelProperty(value = "Telefone", required = true)
 	private String telefone;
 	@Size(max = 20, message = "Complemento tem que ser no máximo {max} caracteres")
+	@ApiModelProperty(value = "Complemento", required = true)
 	private String complemento;
+	@ApiModelProperty(value = "Numero da Casa", required = true)
 	private Integer numero;
 	@Past(message = "Data não existente")
+	@ApiModelProperty(value = "Data de Nascimento", required = true)
 	private LocalDate dataNasc;
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_endereco")
+	@ApiModelProperty(value = "Endereço do Cliente", required = true)
 	private Endereco endereco;
-	
-	
 
 	public Cliente() {
 		// TODO Auto-generated constructor stub
 	}
-
-	
 
 	public Cliente(Long id,
 			@NotBlank(message = "Email não pode estar em branco") @Size(max = 30, message = "Email com máximo de {max} caracteres") @Email(message = "Email inválido") String email,
@@ -87,8 +90,6 @@ public class Cliente {
 		this.complemento = complemento;
 		this.numero = numero;
 	}
-
-
 
 	public Long getId() {
 		return id;

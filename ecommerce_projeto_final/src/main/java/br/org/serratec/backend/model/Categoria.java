@@ -1,28 +1,29 @@
 package br.org.serratec.backend.model;
 
-import java.util.List;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+
+import io.swagger.annotations.ApiModelProperty;
 
 @Entity
 public class Categoria {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@ApiModelProperty(value= "Identificador único da categoria", required = true)
 	@Column(name = "id_categoria")
 	private Long id;
 	@NotBlank(message = "Nome não pode estar em branco")
 	@Size(max = 30, message = "A quantidade máxima de caracteres é {max}")
+	@ApiModelProperty(value= "Nome da Categoria", required = true)
 	private String nome;
 	@NotBlank(message = "Descrição não pode estar em branco")
 	@Size(max = 150, message = "A quantidade máxima de caracteres é {max}")
+	@ApiModelProperty(value= "Descrição da Categoria", required = true)
 	private String descricao;
 	
 	

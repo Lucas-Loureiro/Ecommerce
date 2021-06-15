@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -28,6 +29,9 @@ import br.org.serratec.backend.repository.FotoRepository;
 import br.org.serratec.backend.repository.ProdutoRepository;
 import br.org.serratec.backend.service.FotoService;
 import br.org.serratec.backend.service.ProdutoService;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 
 @RestController
 @RequestMapping("/produto")
@@ -46,6 +50,16 @@ public class ProdutoController {
 	private FotoRepository fotoRepository;
 	
 	@GetMapping
+	@ResponseStatus(HttpStatus.CREATED)
+	@ApiOperation(value="Listar Produto", notes = "Lista Produto")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message="Produto listado com sucesso"),
+			@ApiResponse(code = 401, message="Erro autenticação"),
+			@ApiResponse(code = 403, message="Proibido"),
+			@ApiResponse(code = 404, message="Recurso indisponivel"),
+			@ApiResponse(code = 500, message = "Erro interno no Servidor"),
+			@ApiResponse(code = 505, message="Ocorreu uma exceção")
+	})
 	private ResponseEntity<List<ProdutoDTO>> listar() {
 		List<ProdutoDTO> produtos = produtoService.listar();
 		return ResponseEntity.ok(produtos);
@@ -53,6 +67,16 @@ public class ProdutoController {
 	
 	
 	@PostMapping
+	@ResponseStatus(HttpStatus.CREATED)
+	@ApiOperation(value="Adicionar um Produto", notes = "Adiciona Produto")
+	@ApiResponses(value = {
+			@ApiResponse(code = 201, message="Produto adicionado com sucesso"),
+			@ApiResponse(code = 401, message="Erro autenticação"),
+			@ApiResponse(code = 403, message="Proibido"),
+			@ApiResponse(code = 404, message="Recurso indisponivel"),
+			@ApiResponse(code = 500, message = "Erro interno no Servidor"),
+			@ApiResponse(code = 505, message="Ocorreu uma exceção")
+	})
 	public ResponseEntity<Object> colocar(@RequestParam MultipartFile file,@RequestPart Produto produto) throws IOException{
 		try {
 			return ResponseEntity.ok(produtoService.inserir(produto, file));
@@ -63,6 +87,16 @@ public class ProdutoController {
 	
 	
 	@GetMapping("{nome}")
+	@ResponseStatus(HttpStatus.CREATED)
+	@ApiOperation(value=" Buscar um Produto", notes = "Busca um Produto")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message="Produto buscado com sucesso"),
+			@ApiResponse(code = 401, message="Erro autenticação"),
+			@ApiResponse(code = 403, message="Proibido"),
+			@ApiResponse(code = 404, message="Recurso indisponivel"),
+			@ApiResponse(code = 500, message = "Erro interno no Servidor"),
+			@ApiResponse(code = 505, message="Ocorreu uma exceção")
+	})
 	public ResponseEntity<ProdutoDTO> buscar(@PathVariable String nome){
 		return ResponseEntity.ok(produtoService.buscar(nome));
 		
@@ -70,6 +104,16 @@ public class ProdutoController {
 	
 
 	@DeleteMapping("{id}")
+	@ResponseStatus(HttpStatus.CREATED)
+	@ApiOperation(value="Remover um Produto", notes = "Remove Produto")
+	@ApiResponses(value = {
+			@ApiResponse(code = 201, message="Produto removido com sucesso"),
+			@ApiResponse(code = 401, message="Erro autenticação"),
+			@ApiResponse(code = 403, message="Proibido"),
+			@ApiResponse(code = 404, message="Recurso indisponivel"),
+			@ApiResponse(code = 500, message = "Erro interno no Servidor"),
+			@ApiResponse(code = 505, message="Ocorreu uma exceção")
+	})
 	public ResponseEntity<Produto> remover(@PathVariable Long id) {
 		
 		if (!produtoRepository.existsById(id)) {
@@ -82,6 +126,16 @@ public class ProdutoController {
 	}
 	
 	@PutMapping("{id}")
+	@ResponseStatus(HttpStatus.CREATED)
+	@ApiOperation(value="Atualizar Produto", notes = "Atualiza Produto")
+	@ApiResponses(value = {
+			@ApiResponse(code = 201, message="Produto atualizado com sucesso"),
+			@ApiResponse(code = 401, message="Erro autenticação"),
+			@ApiResponse(code = 403, message="Proibido"),
+			@ApiResponse(code = 404, message="Recurso indisponivel"),
+			@ApiResponse(code = 500, message = "Erro interno no Servidor"),
+			@ApiResponse(code = 505, message="Ocorreu uma exceção")
+	})
 	public ResponseEntity<Object> atualizar(@PathVariable Long id, @RequestParam MultipartFile file,@Valid @RequestPart Produto produto) {
 		if(!produtoRepository.existsById(id)) {
 			return ResponseEntity.notFound().build();
@@ -99,6 +153,16 @@ public class ProdutoController {
 	}
 	
 	@GetMapping("/{id}/foto")
+	@ResponseStatus(HttpStatus.CREATED)
+	@ApiOperation(value=" Buscar Por Foto", notes = "Busca um Por Toto")
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message="Foto buscada com sucesso"),
+			@ApiResponse(code = 401, message="Erro autenticação"),
+			@ApiResponse(code = 403, message="Proibido"),
+			@ApiResponse(code = 404, message="Recurso indisponivel"),
+			@ApiResponse(code = 500, message = "Erro interno no Servidor"),
+			@ApiResponse(code = 505, message="Ocorreu uma exceção")
+	})
 	public ResponseEntity<byte[]> buscarPorFoto(@PathVariable Long id){
 		Foto foto = fotoService.buscar(id);
 		HttpHeaders headers = new HttpHeaders();

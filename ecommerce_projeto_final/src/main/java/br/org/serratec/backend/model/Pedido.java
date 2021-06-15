@@ -1,32 +1,33 @@
 package br.org.serratec.backend.model;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.Transient;
-import javax.validation.constraints.NotBlank;
+
+import io.swagger.annotations.ApiModelProperty;
 
 @Entity
 public class Pedido {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_pedido")
+	@ApiModelProperty(value= "Identificador único do Pedido", required = true)
 	private Long id;
+	@ApiModelProperty(value= "Data do Pedido", required = true)
 	private LocalDate dataPedido;
+	@ApiModelProperty(value= "Data da entrega do Pedido", required = true)
 	private LocalDate dataEntrega;
+	@ApiModelProperty(value= "Data do envio do Pedido", required = true)
 	private LocalDate dataEnvio;
 	
 	private String status;
@@ -34,19 +35,10 @@ public class Pedido {
 	@JoinColumn(name = "id_cliente")
 	private Cliente cliente;
 	@OneToMany(mappedBy = "pedido", fetch = FetchType.EAGER)
-	private List<ItemPedido> itemPedidos = new ArrayList<ItemPedido>();
+	private Set<ItemPedido> itemPedidos = new HashSet<ItemPedido>();
 
 	
-	public Double getTotal() {
-		double soma = 0.0;
-		for (ItemPedido itemPedido : itemPedidos) {
-			soma += itemPedido.getSubTotal();
-			System.out.println(itemPedido.getSubTotal() + " " + soma + itemPedido.getId());
-			
-		
-		}
-		return soma ;
-	}
+	
 
 	public Pedido() {
 		// TODO Auto-generated constructor stub
@@ -54,14 +46,22 @@ public class Pedido {
 
 	@Override
 	public String toString() {
-		
-		return "PEDIDO \nDataEntrega: " + dataEntrega + "\nDataEnvio: " + dataEnvio  + "\nTotal: "
-				+ getTotal() ;
 
+		String data = "PEDIDO \nDataEntrega: " + dataEntrega + "\nDataEnvio: " + dataEnvio;
+		for (ItemPedido itemPedido : itemPedidos) {
+			System.out.println("aqui");
+			data += "\nProduto - " + itemPedido.getProduto().getNome() + " - " + itemPedido.getQuantidade();
+		}
+
+		data += "\n\n\nPreço Total: " + getTotal();
+
+		return data;
 	}
 
-	public Pedido(Long id, LocalDate dataPedido, LocalDate dataEntrega, LocalDate dataEnvio,
-			@NotBlank(message = "Status não pode estar em branco") String status, Cliente cliente) {
+
+
+	public Pedido(Long id, LocalDate dataPedido, LocalDate dataEntrega, LocalDate dataEnvio, String status,
+			Cliente cliente, Set<ItemPedido> itemPedidos) {
 		super();
 		this.id = id;
 		this.dataPedido = dataPedido;
@@ -69,6 +69,7 @@ public class Pedido {
 		this.dataEnvio = dataEnvio;
 		this.status = status;
 		this.cliente = cliente;
+		this.itemPedidos = itemPedidos;
 	}
 
 	public Long getId() {
@@ -119,12 +120,21 @@ public class Pedido {
 		this.cliente = cliente;
 	}
 
-	public List<ItemPedido> getItemPedidos() {
+	public Set<ItemPedido> getItemPedidos() {
 		return itemPedidos;
 	}
 
-	public void setItemPedidos(List<ItemPedido> itemPedidos) {
+	public void setItemPedidos(Set<ItemPedido> itemPedidos) {
 		this.itemPedidos = itemPedidos;
+	}
+
+	public Double getTotal() {
+		double soma = 0.0;
+		for (ItemPedido itemPedido : itemPedidos) {
+			soma += itemPedido.getSubTotal();
+
+		}
+		return soma;
 	}
 
 	@Override

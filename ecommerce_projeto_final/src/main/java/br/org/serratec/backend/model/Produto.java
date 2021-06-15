@@ -2,7 +2,6 @@ package br.org.serratec.backend.model;
 
 
 import java.time.LocalDate;
-import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -12,38 +11,46 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
+import io.swagger.annotations.ApiModelProperty;
+
 @Entity
 public class Produto {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id_produto")
+	@ApiModelProperty(value= "Identificador único do Produto", required = true)
 	private Long id;
 	@NotBlank(message = "Nome não pode estar em branco")
 	@Size(max = 30, message = "A quantidade máxima de caracteres é {max}")
+	@ApiModelProperty(value= "Nome do Produto", required = true)
 	private String nome;
 	@NotBlank(message = "Descrição não pode estar em branco")
 	@Size(max = 100, message = "A quantidade máxima de caracteres é {max}")
+	@ApiModelProperty(value= "Descrição do Produto", required = true)
 	private String descricao;
 	@Min(value = 0)
+	@ApiModelProperty(value= "Quantidade do Produto", required = true)
 	private Integer qtdEstoque;
+	@ApiModelProperty(value= "Data de cadastro do Produto", required = true)
 	private LocalDate dataCadastro;
 	@Positive
 	@Column(name = "valor_unitario")
+	@ApiModelProperty(value= "Valor unitário do Produto", required = true)
 	private Double valorUnitario;
 	@OneToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_foto")
+	@ApiModelProperty(value= "Foto do Produto", required = true)
 	private Foto foto;
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "id_categoria")
+	@ApiModelProperty(value= "Categoria do Produto", required = true)
 	private Categoria categoria;
-	
 
 	public Produto() {
 		// TODO Auto-generated constructor stub
